@@ -1,10 +1,11 @@
 from magma import *
 from mantle import *
 from parts.lattice.ice40.primitives.RAMB import ROMB
-from mem import read as readmem
-from seq import Sequencer
-from alu import Arith, Logic
-from ram import DualRAM
+from .mem import read as readmem
+from .seq import Sequencer
+from .alu import Arith, Logic
+from .ram import DualRAM
+from magma.bits import int2seq
 
 __all__ = ['Pico', 'ADDRN', 'INSTN', 'DATAN', 'MAXINSTS']
 
@@ -67,7 +68,7 @@ def DefinePico(debug=False):
     #   execute()
     phase = TFF()(1)
 
-    print 'Building z'
+    print ('Building z')
     z = DFF(ce=True)
     condz = Decode(0, 4)(cc)  #jz
     condnz = Decode(1, 4)(cc) #jnz
@@ -84,48 +85,48 @@ def DefinePico(debug=False):
 
 
     # sequencer
-    print 'Building sequencer'
+    print ('Building sequencer')
     seq = Sequencer(ADDRN)  
     pc = seq(addr, jump, phase)
     wire(pc, pico.addr)
 
-    print 'Building input mux'
+    print ('Building input mux')
     regiomux = Mux(2, N)
     regiomux(imm, pico.I, ldinst)
 
-    print 'Building register input mux'
+    print ('Building register input mux')
     regimux = Mux(2, N)
 
-    print 'Building registers'
+    print ('Building registers')
     raval, rbval = DualRAM(4, ra, rb, ra, regimux, regwr)
 
     # alu
-    print 'Building logic unit'
+    print ('Building logic unit')
     logicunit = Logic(N)
-    print 'Building arith unit'
+    print ('Building arith unit')
     arithunit = Arith(N)
-    print 'Building alu mux'
+    print ('Building alu mux')
     alumux = Mux(2, N)
 
-    print 'Wiring logic unit'
+    print ('Wiring logic unit')
     logicres = logicunit(raval, rbval, op[0], op[1])
-    print 'Wiring arith unit'
+    print ('Wiring arith unit')
     arithres = arithunit(raval, rbval, op[0], op[1])
     wire(0, arithunit.CIN)
-    print 'Wiring alumux'
+    print ('Wiring alumux')
     res = alumux(logicres, arithres, arithinst)
 
-    print 'Wiring register input mux'
+    print ('Wiring register input mux')
     ld = Or2()(ldinst, ldloinst)
     regimux(res, regiomux, ld) 
 
     # z flag
-    print 'Wiring z'
+    print ('Wiring z')
     zval = Decode(0, N)
     zwr =  And2()(aluinst, phase)
     z(zval(res), CE=zwr)
 
-    print 'Wiring output'
+    print ('Wiring output')
     owr = And2()(stinst, phase)
     wire(owr, pico.we)
 

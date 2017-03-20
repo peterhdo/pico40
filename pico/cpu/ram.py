@@ -11,16 +11,16 @@ def readport(logn, regs, raddr):
     n = 1 << logn
 
     muxs = MUXs(n-1)
-    for i in range(n/2):
+    for i in range(n//2):
         muxs[i](regs[2*i], regs[2*i+1], raddr[0])
 
     k = 0
     l = 1 << (logn-1)
     for i in range(logn-1):
-        for j in range(l/2):
+        for j in range(l//2):
             muxs[k+l+j](muxs[k+2*j], muxs[k+2*j+1], raddr[i+1])
         k += l
-        l /= 2
+        l = l//2
 
     return muxs[n-2]
 

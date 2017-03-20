@@ -1,5 +1,5 @@
 import sys
-from arch import Arch
+from .arch import Arch
 
 
 def instDump(arch, inst):

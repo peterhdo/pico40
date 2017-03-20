@@ -1,4 +1,4 @@
-from isa import *
+from .isa import *
 
 # pseudoinstructions
 

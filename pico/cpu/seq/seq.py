@@ -48,11 +48,11 @@ if __name__ == '__main__':
 
     mem = read('a.mem')
     mem += (256-len(mem))*[0]
-    print len(mem)
+    print (len(mem))
     
     # program memory
     romb = ROMB(mem)
-    print romb.interface
+    print (romb.interface)
     wire( 1, romb.RE    )
     wire( 1, romb.RCLKE )
     inst = romb.RDATA

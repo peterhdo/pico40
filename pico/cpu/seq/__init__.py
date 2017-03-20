@@ -1,2 +1,2 @@
-from seq import *
+from .seq import *
 

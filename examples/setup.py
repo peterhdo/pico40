@@ -2,13 +2,15 @@ from magma import *
 from mantle import *
 from parts.lattice.ice40.primitives.RAMB import ROMB
 from pico.asm import assemble
-from pico.cpu import Pico, Input, Output, ADDRN, DATAN
+from pico.cpu.pico import Pico, ADDRN, DATAN
+from pico.cpu.io import Input, Output
 from boards.icestick import IceStick
 
 __all__ = ['makepico', 'makepicoicestick']
 
 def makepico(prog, inputs, outputs):
     mem = assemble(prog, 1 << ADDRN)
+    print(mem)
 
     romb = ROMB(mem)
     wire( 1, romb.RCLKE )

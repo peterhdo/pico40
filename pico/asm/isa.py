@@ -1,5 +1,5 @@
-from util import checku
-from asm import emit
+from .util import checku
+from .asm import emit
 
 def mov ( a, b ):
     a = checku ( a , 4 )

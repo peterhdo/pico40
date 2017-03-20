@@ -102,45 +102,45 @@ regwr = LUT4((I0|I1|I2)&I3)(aluinst, ldloinst, ldinst, phase)
 
 
 # sequencer
-print 'Building sequencer'
+print ('Building sequencer')
 seq = Sequencer(ADDRN)  
 pc = seq(addr, jump, phase)
 wire(pc, romb.RADDR)
 
-print 'Building input'
+print ('Building input')
 input = main.J1
 
-print 'Building input mux'
+print ('Building input mux')
 regiomux = Mux(2, N)
 regiomux(imm, input, ldinst)
 
-print 'Building register input mux'
+print ('Building register input mux')
 regimux = Mux(2, N)
 
-print 'Building registers'
+print ('Building registers')
 raval, rbval = DualRAM(4, ra, rb, ra, regimux, regwr)
 
 # alu
-print 'Building logic unit'
+print ('Building logic unit')
 logicunit = Logic(N)
-print 'Building arith unit'
+print ('Building arith unit')
 arithunit = Arith(N)
-print 'Building alu mux'
+print ('Building alu mux')
 alumux = Mux(2, N)
 
-print 'Wiring logic unit'
+print ('Wiring logic unit')
 logicres = logicunit(raval, rbval, op[0], op[1])
-print 'Wiring arith unit'
+print ('Wiring arith unit')
 arithres = arithunit(raval, rbval, op[0], op[1])
 wire(0, arithunit.CIN)
-print 'Wiring alumux'
+print ('Wiring alumux')
 res = alumux(logicres, arithres, arithinst)
 
-print 'Wiring register input mux'
+print ('Wiring register input mux')
 ld = Or2()(ldinst, ldloinst)
 regimux(res, regiomux, ld) # full io
 
-print 'Wiring output'
+print ('Wiring output')
 output = Register(N, ce=True)
 owr = And2()(stinst, phase)
 output(raval, CE=owr)

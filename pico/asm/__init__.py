@@ -1,3 +1,3 @@
-from inst import *
-from asm import *
-from mem import *
+from .inst import *
+from .asm import *
+from .mem import *
